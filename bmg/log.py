@@ -1,6 +1,6 @@
 """ log.py
 
-    Logging is really important, specially for a bot that keeps on running
+    Logging is really important, specially for a bmg that keeps on running
     without anyone looking at the console. This file contains methods for
     easily handling with log outputs in the console, and in files.
 
@@ -15,7 +15,7 @@ import sys
 
 from datetime import datetime
 from os import path, mkdir
-from consts import ROOT_DIR
+from .consts import ROOT_DIR
 
 
 def open_log_file():
@@ -27,7 +27,7 @@ def open_log_file():
 
 
 def create_default_logger(is_debug: bool = False):
-    logger = logging.getLogger('bsky.bot')
+    logger = logging.getLogger('bsky.bmg')
     logger.setLevel(logging.DEBUG if is_debug else logging.INFO)
 
     handler = logging.StreamHandler(sys.stdout if is_debug else open_log_file())

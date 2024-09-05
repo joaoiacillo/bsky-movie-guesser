@@ -1,19 +1,26 @@
 """ tmdb.py
     
-    TMDB is the main API for fetching movies data for this bot. This file
+    TMDB is the main API for fetching movies data for this bmg. This file
     contains the main TMDB client class for working with it more easily,
     and some other util methods.
 
     Author: João Iacillo <john@iacillo.dev.br>
 """
 
+from dataclasses import dataclass
+from random import choice, randint, sample
+
 from requests import get
-from random import sample
-from collections import namedtuple
 
-Movie = namedtuple('Movie', ('id', 'title', 'cleaned_title', 'images'))
+from bmg.matcher import Match
 
-FNAF_ID = 507089
+
+@dataclass
+class Movie:
+    id: int
+    title: str
+    cleaned_title: str
+    images: list[bytes] | None
 
 
 class TmdbClient:
@@ -30,9 +37,24 @@ class TmdbClient:
 
         return get(url, params, headers=headers)
 
-    @staticmethod
-    def get_random_movie_id() -> int:
-        return FNAF_ID
+    def get_random_movie(self) -> Movie:
+        page = randint(1, 1000) // 20
+        url = f'https://api.themoviedb.org/3/discover/movie'
+        params = {
+            'include_adult': 'false',
+            'sort_by':       'popularity.desc',
+            'page':          page
+        }
+        response = self.request(url, params)
+        results = response.json()['results']
+        chosen = choice(results)
+
+        return Movie(
+                chosen['id'],
+                chosen['title'],
+                Match.clean(chosen['title']),
+                None
+        )
 
     def get_movie_name(self, movie_id: int) -> str:
         url = f' https://api.themoviedb.org/3/movie/{movie_id}'
@@ -50,15 +72,23 @@ class TmdbClient:
 
 class TmdbMovieUtils:
     @classmethod
-    def get_n_movie_backdrops(cls, client: TmdbClient, movie_id: int, n: int = 4):
+    def get_n_movie_backdrops(
+            cls,
+            client: TmdbClient,
+            movie_id: int,
+            n: int = 4
+    ):
         """
         Automatically fetches `n` random backdrops from a movie with `id`.
         """
 
         all_backdrops = client.get_movie_backdrops(movie_id)
+        if len(all_backdrops) < 4:
+            return None
         n_backdrops = sample(all_backdrops, n)
 
-        images = [cls.get_movie_image(backdrop['file_path']) for backdrop in n_backdrops[:n]]
+        images = [cls.get_movie_image(backdrop['file_path']) for backdrop in
+                  n_backdrops[:n]]
 
         return images
 

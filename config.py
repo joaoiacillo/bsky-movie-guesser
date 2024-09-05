@@ -73,6 +73,14 @@ BOT_THRESHOLD: int = getenv(
     transforms = [ int ]
 )
 
+# Database Environment Variables
+
+DB_FILE: str = getenv(
+    'DB_FILE',
+    'bmg.db',
+    transforms= [ str.strip ]
+)
+
 # TMDB Environment Variables
 
 TMDB_API_ACCESS_TOKEN = getenv('TMDB_API_ACCESS_TOKEN')
