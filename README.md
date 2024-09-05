@@ -10,8 +10,9 @@ configure the `.env` file. Let's go through those step-by-step.
 
 ### Install the requirements
 
-> Before installing, we highly recommend you to use a virtual environment so
-> that your system's Python won't get messed up.
+> Keep in mind that the bot only works in **Python 3.9** or greater. You
+> might get _type errors_ if using lower versions. It's also beneficial
+> creating a virtual environment before installing the requirements.
 
 Let's start with the easiest one. We assume that you have Python and pip
 installed in your system. There is a `requirements.txt` file ready for you
