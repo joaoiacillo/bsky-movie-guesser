@@ -118,8 +118,7 @@ class Game:
                 db_posts_rowid
         )
 
-        # sleep(60 * 30)
-        input("ENTER:")
+        sleep(60 * 30)
 
         self.state = GameState.CALCULATION
 
@@ -160,8 +159,7 @@ class Game:
         self.db.rounds.update_ended_in(db_round_rowid, now)
         self.db.commit()
 
-        # sleep(60 * 30)
-        input("ENTER:")
+        sleep(60 * 30)
 
     def check_for_last_rounds(self):
         """
