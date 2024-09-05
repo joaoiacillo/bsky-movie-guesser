@@ -19,6 +19,8 @@ httpx==0.26.0
 idna==3.8
 Levenshtein==0.25.1
 libipld==1.2.3
+mypy==1.11.2
+mypy-extensions==1.0.0
 pillow==10.4.0
 pycodestyle==2.12.1
 pycparser==2.22
