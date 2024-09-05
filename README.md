@@ -2,7 +2,29 @@
 
 BlueSky social media bot for guessing movies collectively and scoring points.
 
-## Getting Started
+## Installing with Docker
+
+We all love Docker, so we've provided a `Dockerfile` ready for building in
+the root folder of this repository. It already uses the required Python
+version, it's isolated and easy to manage. Use the following commands to
+install with Docker:
+
+### Configure the Environment Variables
+
+There are required environment variables that need to be defined before
+running. You can create the `.env` file according to
+[Configuring the environment](#configuring-the-environment) since it will be
+copied to the Docker image during building, or set them manually during the
+`run` command.
+
+### Building and Running
+
+```bash
+$ sudo docker build -t bsky-movie-guesser .
+$ sudo docker run -it --rm --name bmg bsky-movie-guesser
+````
+
+## Installing Manually
 
 The bot was created to be easy to configure and run. The only things to do are
 install all requirements from pip, grab your credentials for the APIs and

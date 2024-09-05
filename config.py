@@ -76,7 +76,7 @@ BOT_DEBUG_MODE: bool = getenv(
 
 BOT_THRESHOLD: int = getenv(
         'BOT_THRESHOLD',
-        80,
+        '80',
         nullable=True,
         checks=[lambda val: val.isnumeric() or '{key} expected to receive a '
                                                'numeric value, but received:'
@@ -105,7 +105,7 @@ TMDB_API_ACCESS_TOKEN = getenv('TMDB_API_ACCESS_TOKEN')
 
 TMDB_IMAGE_QUALITY: int = getenv(
         'TMDB_IMAGE_QUALITY',
-        75,
+        '75',
         nullable=True,
         checks=[lambda val: val.isnumeric() or '{key} expected to receive a '
                                                'numeric value, but received:'
