@@ -9,6 +9,7 @@
 
 from dataclasses import dataclass
 from random import choice, randint, sample
+from typing import Union
 
 from requests import get
 
@@ -20,7 +21,7 @@ class Movie:
     id: int
     title: str
     cleaned_title: str
-    images: list[bytes] | None
+    images: Union[list[bytes], None]
 
 
 class TmdbClient:

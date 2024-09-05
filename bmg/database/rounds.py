@@ -1,6 +1,7 @@
 from dataclasses import dataclass
 from datetime import datetime
 from sqlite3 import Connection, Cursor
+from typing import Union
 
 
 @dataclass
@@ -10,11 +11,11 @@ class RoundModel:
     state: int
     movie: str
     posts: int
-    percent: int | None
-    attempts: int | None
+    percent: Union[int, None]
+    attempts: Union[int, None]
 
     created_in: str
-    ended_in: str | None
+    ended_in: Union[str, None]
 
 
 class Rounds:

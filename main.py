@@ -28,7 +28,8 @@ if __name__ == '__main__':
 
     game_config = GameConfig(
             bsky=bsky, tmdb=tmdb, imgp=imgp, db=db, logger=logger,
-            threshold=config.BOT_THRESHOLD
+            threshold=config.BOT_THRESHOLD,
+            skip_on_input=config.BOT_SKIP_ON_INPUT
     )
 
     game = Game(game_config)

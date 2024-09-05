@@ -1,6 +1,7 @@
 from datetime import datetime
 from logging import Logger
 from time import sleep
+from typing import Union
 
 from bmg.bsky import BskyClient
 from bmg.database import Database
@@ -24,14 +25,15 @@ class Game:
         self.imgp: ImagePreparer = config.imgp
         self.db: Database = config.db
         self.logger: Logger = config.logger
+        self.skip_on_input = config.skip_on_input
 
-        self.last_round: RoundModel | None = self.db.rounds.last_round()
+        self.last_round: Union[RoundModel, None] = self.db.rounds.last_round()
 
         self.state: int = GameState.STOPPED
         self.round_number = self.last_round.num if self.last_round else 0
         self.threshold: int = config.threshold
 
-        self.movie: Movie | None = None
+        self.movie: Union[Movie, None] = None
         self.posts = GamePostUris(None, None, None, None)
 
         self.attempts = 0
@@ -39,8 +41,8 @@ class Game:
         self.percent = -1
 
     def select_random_movie(self):
-        movie: Movie | None = None  # self.tmdb.get_random_movie()
-        backdrops: list[bytes] | None = None  #
+        movie: Union[Movie, None] = None  # self.tmdb.get_random_movie()
+        backdrops: Union[list[bytes], None] = None  #
 
         # Movies that have under 4 backdrops must not be selected.
         while backdrops is None:
@@ -98,6 +100,14 @@ class Game:
         self.bsky.delete_post(self.posts.end)
         self.posts.end = None
 
+    def wait(self, minutes: int):
+        if self.skip_on_input:
+            print(f"Press ENTER to skip {minutes} minutes:", end=' ')
+            input()
+            print('Skipped.')
+            return
+        sleep(60 * minutes)
+
     def new_round(self):
         self.state = GameState.INITIAL
         self.round_number += 1
@@ -110,6 +120,8 @@ class Game:
                 self.movie.images
         ).uri
 
+        self.logger.info("Round sent to Bsky")
+
         db_posts_rowid: int = self.db.posts.create(self.posts.round)
         db_round_rowid: int = self.db.rounds.create(
                 self.round_number,
@@ -118,7 +130,11 @@ class Game:
                 db_posts_rowid
         )
 
-        sleep(60 * 30)
+        self.logger.info("Round created on database")
+
+        self.wait(30)
+
+        self.logger.info(f"Round wait time over")
 
         self.state = GameState.CALCULATION
 
@@ -130,7 +146,7 @@ class Game:
                     GamePosts.insufficient(self.round_number)
             )
             self.logger.info('Not enough users. Retrying in 15 minutes...')
-            sleep(60 * 15)
+            self.wait(15)
             return
 
         self.db.posts.update_end_uri(db_posts_rowid, self.posts.end)
@@ -159,7 +175,7 @@ class Game:
         self.db.rounds.update_ended_in(db_round_rowid, now)
         self.db.commit()
 
-        sleep(60 * 30)
+        self.wait(30)
 
     def check_for_last_rounds(self):
         """
@@ -202,4 +218,4 @@ class Game:
                 if self.posts.round:
                     self.bsky.delete_post(self.posts.round)
 
-                sleep(60 * 15)
+                self.wait(15)

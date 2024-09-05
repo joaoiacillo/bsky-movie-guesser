@@ -6,6 +6,7 @@
 """
 
 from io import BytesIO
+from typing import Union
 
 from PIL import Image
 from PIL.ImageFile import ImageFile
@@ -15,7 +16,7 @@ class Buffer:
     def __init__(self, i_bytes: bytes):
         self.buffer = BytesIO(i_bytes)
 
-    def create_pair(self) -> tuple[ImageFile | Image.Image, BytesIO]:
+    def create_pair(self) -> tuple[Union[ImageFile, Image.Image], BytesIO]:
         """
         Opens an image file based on the current buffer, and returns it
         right alongside with a new BytesIO instance that can be saved with the
